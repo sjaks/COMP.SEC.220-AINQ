@@ -54,3 +54,20 @@ for drone in edge_drones:
     index += 1
 
 print("---> retrieved the group key at all edge drones")
+
+# Add a new edge drone and rekey
+print("---> adding a new edge drone")
+additional_edge_drone = EdgeDrone()
+additional_edge_drone.gen_secret_value(kgc.q, omega[0])
+additional_edge_drone.R_i = R_i
+additional_edge_drone.s_i = s_i
+kgc.gen_partial_key(additional_edge_drone.d_i, additional_edge_drone.P_i, omega[5])
+edge_drones.append(additional_edge_drone)
+print("---> added a new edge drone")
+group_key = leader_drone.rekey(edge_drones, kgc.q, omega[0], omega[3], omega[4], omega[1], t_g)
+
+# Key retrieval for edge drones # TODO: why wrong values for new drones?
+index = 0
+for drone in edge_drones:
+    drone.key_retrieval(group_key[0], group_key[1][index], omega[4], leader_drone.d_i, leader_drone.R_i, leader_drone.P_i, t_g)
+    index += 1
