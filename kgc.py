@@ -3,8 +3,8 @@ from random import randint
 from util.hash import gen_hash
 
 class Kgc:
-    H_0 = ""
-    H_1 = ""
+    H_0: callable
+    H_1: callable
     q: int
 
 
