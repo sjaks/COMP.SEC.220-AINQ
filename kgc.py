@@ -43,7 +43,7 @@ class Kgc:
         P_pub = x_master * G            # scalar multiplication, public key
 
         self.H_0 = gen_hash
-        self.H_1 = ""
+        self.H_1 = gen_hash
 
         return (G, P_pub, P, self.H_0, self.H_1, x_master)
 

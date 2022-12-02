@@ -7,6 +7,7 @@ class BaseDrone:
     P_i: ECCPoint
     s_i: int
     R_i: ECCPoint
+    K_g = ""
 
 
     def __init__(self):
