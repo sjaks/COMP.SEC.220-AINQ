@@ -42,4 +42,4 @@ class LeaderDrone(BaseDrone):
         self.GL_i = GL
         self.K_g = K_g_n
 
-        return (V, cipher_texts)
+        return (V, cipher_texts, t_g)
