@@ -3,6 +3,7 @@
 
 from dataclasses import dataclass
 from re import I
+import time
 
 @dataclass
 class PrimeGaloisField:
@@ -144,6 +145,7 @@ class ECCPoint:
 
     ##  ======== Scalar Multiplication x * P1 = P1 ============== ##
     def __rmul__(self, scalar: int) -> "ECCPoint":
+        # start = time.time()
         inPoint = self
         outPoint = I
 
@@ -152,6 +154,8 @@ class ECCPoint:
                 outPoint = outPoint + inPoint
             inPoint = inPoint + inPoint
             scalar >>= 1
+        
+        # print(str(time.time() - start))
         return outPoint
 
 

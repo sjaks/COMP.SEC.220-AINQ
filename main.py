@@ -12,12 +12,13 @@ kgc = Kgc()
 o = kgc.setup()
 leader_drone = LeaderDrone()
 edge_drones = []
-EDGE_DRONE_NRO = 10
+EDGE_DRONE_NRO = 5
+ADDITIONAL_DRONE_NRO = 3
 
 print("---> added 1 team leader drone")
 
 # Add new edge drones
-for i in range(EDGE_DRONE_NRO):
+for _ in range(EDGE_DRONE_NRO):
     new_edge = EdgeDrone()
     edge_drones.append(new_edge)
 
@@ -43,9 +44,11 @@ for drone in edge_drones:
     drone.full_key_gen(s_i, R_i) # generate full keys for edge drones
 
 # Compute a group key at the leader drone
-print("---> generating and retrieving group keys")
+# print("---> generating and retrieving group keys")
 t_g = 600 # some time validity
+start = time.time()
 group_key = leader_drone.gen_group_key(edge_drones, t_g, kgc.q, o["G"], o["H_0"], o["H_1"], o["P_pub"])
+# print(str(time.time() - start))
 
 # Key retrieval for edge drones
 index = 0
@@ -56,17 +59,20 @@ for drone in edge_drones:
 print("---> retrieved the group key at all edge drones")
 
 # Add a new edge drone and rekey
-print("---> adding a new edge drone")
-additional_edge_drone = EdgeDrone()
-additional_edge_drone.gen_secret_value(kgc.q, o["G"])
-R_i, s_i = kgc.gen_partial_key(additional_edge_drone.d_i, additional_edge_drone.P_i, o["x"])
-additional_edge_drone.R_i = R_i
-additional_edge_drone.s_i = s_i
-edge_drones.append(additional_edge_drone)
-print("---> added a new edge drone")
+for i in range(ADDITIONAL_DRONE_NRO):
+    print("---> adding a new edge drone", i + 1)
+    additional_edge_drone = EdgeDrone()
+    additional_edge_drone.gen_secret_value(kgc.q, o["G"])
+    R_i, s_i = kgc.gen_partial_key(additional_edge_drone.d_i, additional_edge_drone.P_i, o["x"])
+    additional_edge_drone.R_i = R_i
+    additional_edge_drone.s_i = s_i
+    edge_drones.append(additional_edge_drone)
+    print("---> added a new edge drone")
 
 # Regenerate group key for the updated drone list
+# start = time.time()
 group_key = leader_drone.rekey(edge_drones, kgc.q, o["G"], o["H_0"], o["H_1"], o["P_pub"], t_g)
+# print(str(time.time() - start))
 
 # Re-key retrieval for edge drones
 index = 0

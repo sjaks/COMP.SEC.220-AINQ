@@ -1,5 +1,6 @@
 from util.ecc import ECCPoint
 from random import randint
+import time
 
 class BaseDrone:
     d_i: str
@@ -18,8 +19,10 @@ class BaseDrone:
     def gen_secret_value(self, q, G):
         # Decide a random secret value and
         # calculate a public value
+        # start = time.time()
         self.x_i = randint(0, q)
         self.P_i = self.x_i * G
+        # print(str(time.time() - start))
 
 
     def full_key_gen(self, s_i, R_i):
