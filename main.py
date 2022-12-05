@@ -12,8 +12,8 @@ kgc = Kgc()
 o = kgc.setup()
 leader_drone = LeaderDrone()
 edge_drones = []
-EDGE_DRONE_NRO = 5
-ADDITIONAL_DRONE_NRO = 3
+EDGE_DRONE_NRO = 10
+ADDITIONAL_DRONE_NRO = 5
 
 print("---> added 1 team leader drone")
 
@@ -44,9 +44,9 @@ for drone in edge_drones:
     drone.full_key_gen(s_i, R_i) # generate full keys for edge drones
 
 # Compute a group key at the leader drone
-# print("---> generating and retrieving group keys")
+print("---> generating and retrieving group keys")
 t_g = 600 # some time validity
-start = time.time()
+# start = time.time()
 group_key = leader_drone.gen_group_key(edge_drones, t_g, kgc.q, o["G"], o["H_0"], o["H_1"], o["P_pub"])
 # print(str(time.time() - start))
 
@@ -59,6 +59,7 @@ for drone in edge_drones:
 print("---> retrieved the group key at all edge drones")
 
 # Add a new edge drone and rekey
+new_edge_drones = []
 for i in range(ADDITIONAL_DRONE_NRO):
     print("---> adding a new edge drone", i + 1)
     additional_edge_drone = EdgeDrone()
@@ -66,15 +67,16 @@ for i in range(ADDITIONAL_DRONE_NRO):
     R_i, s_i = kgc.gen_partial_key(additional_edge_drone.d_i, additional_edge_drone.P_i, o["x"])
     additional_edge_drone.R_i = R_i
     additional_edge_drone.s_i = s_i
-    edge_drones.append(additional_edge_drone)
+    new_edge_drones.append(additional_edge_drone)
     print("---> added a new edge drone")
 
 # Regenerate group key for the updated drone list
 # start = time.time()
-group_key = leader_drone.rekey(edge_drones, kgc.q, o["G"], o["H_0"], o["H_1"], o["P_pub"], t_g)
+group_key = leader_drone.rekey(new_edge_drones, kgc.q, o["G"], o["H_0"], o["H_1"], o["P_pub"], t_g)
 # print(str(time.time() - start))
 
 # Re-key retrieval for edge drones
+edge_drones = edge_drones + new_edge_drones
 index = 0
 for drone in edge_drones:
     drone.key_retrieval(group_key[0], group_key[1][index], o["H_1"], leader_drone.d_i, leader_drone.R_i, leader_drone.P_i, t_g)

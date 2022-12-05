@@ -8,7 +8,7 @@ Implemented for Tampere University course *Helping Alice and Bob to share secret
 pip install hashlib
 python3 main.py
 ```
-Change the value of `EDGE_DRONE_NRO` in main.py to change the number of edge drones.
+Change the values of `EDGE_DRONE_NRO` and `ADDITIONAL_DRONE_NRO` in main.py to change the number of edge drones.
 
 ### Demo screencast
 https://youtu.be/7tNOnBbzRNA
